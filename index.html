@@ -1,4 +1,3 @@
-<!--1update-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,57 +5,65 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Knowledge Challenge Quiz</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .fade-in { animation: fadeIn 0.5s ease-in; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    .timer-warning { animation: pulse 1s infinite; }
-    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-  </style>
 </head>
-<body class="bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-800 min-h-screen">
+<body class="bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-800 min-h-screen text-white">
+  <!-- Registration Screen -->
   <div id="welcomeScreen" class="min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl max-w-2xl w-full p-8 text-center fade-in">
-      <h1 class="text-4xl font-bold text-white mb-4" id="welcomeTitle">🧠 Knowledge Challenge Quiz</h1>
-      <p class="text-white/90 text-lg">Test your knowledge and win exciting prizes!</p>
-      <button onclick="startQuiz()" class="mt-6 bg-gradient-to-r from-green-500 to-blue-600 text-white px-8 py-4 rounded-2xl text-xl font-semibold hover:from-green-600 hover:to-blue-700 transform hover:scale-105 transition-all shadow-lg">Start Quiz 🚀</button>
+    <div class="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl max-w-lg w-full p-8 fade-in">
+      <h1 class="text-3xl font-bold mb-4" id="welcomeTitle">🧠 Knowledge Challenge Quiz</h1>
+      <form id="registrationForm" class="space-y-4">
+        <input type="text" id="name" placeholder="Full Name" required class="w-full p-3 rounded text-black" />
+        <input type="email" id="email" placeholder="Email" required class="w-full p-3 rounded text-black" />
+        <input type="tel" id="phone" placeholder="Phone Number" required class="w-full p-3 rounded text-black" />
+        <input type="text" id="postal" placeholder="Postal Address" class="w-full p-3 rounded text-black hidden" />
+        <div class="bg-white/5 p-3 rounded text-sm">
+          <label><input type="checkbox" id="terms" required> I agree to the Terms & Conditions</label>
+        </div>
+        <button type="submit" class="w-full bg-green-500 hover:bg-green-600 p-3 rounded font-bold">Start Quiz 🚀</button>
+      </form>
     </div>
   </div>
 
+  <!-- Quiz Screen -->
   <div id="quizScreen" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
-    <div class="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl max-w-3xl w-full p-8 fade-in">
+    <div class="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl max-w-3xl w-full p-8">
       <div class="flex justify-between items-center mb-6">
-        <div class="text-white"><span class="text-lg">Question <span id="currentQuestionNum">1</span> of <span id="totalQuestions">0</span></span></div>
-        <div id="timerDisplay" class="bg-red-500 text-white px-4 py-2 rounded-full font-bold text-lg">⏰ <span id="timeLeft">10</span>s</div>
+        <div>Question <span id="currentQuestionNum">1</span> of <span id="totalQuestions">0</span></div>
+        <div id="timerDisplay" class="bg-red-500 px-4 py-2 rounded-full font-bold">⏰ <span id="timeLeft">10</span>s</div>
       </div>
-      <h3 id="questionText" class="text-2xl font-bold text-white mb-6">Loading question...</h3>
+      <h3 id="questionText" class="text-2xl font-bold mb-6">Loading question...</h3>
       <div id="optionsContainer" class="space-y-4"></div>
       <div class="flex justify-between mt-6">
-        <button onclick="skipQuestion()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-semibold transition-all">Skip Question ⏭️</button>
-        <button onclick="submitAnswer()" class="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-all">Submit Answer ✅</button>
+        <button onclick="skipQuestion()" class="bg-gray-500 px-6 py-3 rounded">Skip ⏭️</button>
+        <button onclick="submitAnswer()" class="bg-green-500 px-8 py-3 rounded">Submit ✅</button>
       </div>
     </div>
   </div>
 
+  <!-- Thank You Screen -->
   <div id="thankYouScreen" class="hidden min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl max-w-2xl w-full p-8 text-center fade-in">
-      <div class="text-6xl mb-4">🎉</div>
-      <h2 class="text-3xl font-bold text-white mb-4">Thank You for Participating!</h2>
-      <p class="text-white">Your answers have been submitted.</p>
-      <button onclick="location.reload()" class="mt-6 bg-purple-600 text-white px-8 py-4 rounded-2xl text-xl font-semibold hover:bg-purple-700 transform hover:scale-105 transition-all shadow-lg">Restart 🔄</button>
+    <div class="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl max-w-lg w-full p-8 text-center">
+      <h2 class="text-3xl font-bold mb-4">🎉 Thank You for Participating!</h2>
+      <p>Your answers will be reviewed and you will receive your e-certificate on <span id="certificateDate"></span>.</p>
     </div>
   </div>
 
 <script>
-let quizData = { title: "Dynamic Quiz", timer: 10, questions: [] };
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxfbvtVb8F1_DLHj_AMjwwx0XdbyTLWR8pHYtY3qm9ZBLP5hmws4XBGiFuRDbsTCY_I6Q/exec";
-let currentQuestion = 0, selectedAnswer = null, timer = null, timeLeft = quizData.timer, answers = [];
+const GOOGLE_SHEET_URL = "YOUR_WEB_APP_URL";
+let quizData = {};
+let currentQuestion = 0, selectedAnswer = null, timer = null, timeLeft = 0, answers = [], userDetails = {};
 
-function startQuiz() {
+document.getElementById('registrationForm').addEventListener('submit', e => {
+  e.preventDefault();
+  userDetails.name = document.getElementById('name').value;
+  userDetails.email = document.getElementById('email').value;
+  userDetails.phone = document.getElementById('phone').value;
+  if (quizData.postalRequired) userDetails.postalAddress = document.getElementById('postal').value;
   document.getElementById('welcomeScreen').classList.add('hidden');
   document.getElementById('quizScreen').classList.remove('hidden');
   loadQuestion();
   startTimer();
-}
+});
 
 function loadQuestion() {
   const q = quizData.questions[currentQuestion];
@@ -65,25 +72,22 @@ function loadQuestion() {
   document.getElementById('questionText').textContent = q.question;
   const container = document.getElementById('optionsContainer');
   container.innerHTML = "";
-  q.options.forEach((opt, index) => {
+  q.options.forEach((opt, i) => {
     const btn = document.createElement('button');
     btn.textContent = opt;
-    btn.className = "block w-full text-left bg-white text-black px-4 py-2 rounded hover:bg-gray-200";
-    btn.onclick = () => { selectedAnswer = index; [...container.children].forEach(c => c.classList.remove("bg-blue-300")); btn.classList.add("bg-blue-300"); };
+    btn.className = "block w-full bg-white text-black p-2 rounded";
+    btn.onclick = () => { selectedAnswer = i; [...container.children].forEach(c => c.classList.remove("bg-blue-300")); btn.classList.add("bg-blue-300"); };
     container.appendChild(btn);
   });
-  selectedAnswer = null;
-  document.getElementById('timeLeft').textContent = quizData.timer;
 }
 
 function startTimer() {
   clearInterval(timer);
   timeLeft = quizData.timer;
+  document.getElementById('timeLeft').textContent = timeLeft;
   timer = setInterval(() => {
     timeLeft--;
     document.getElementById('timeLeft').textContent = timeLeft;
-    if (timeLeft <= 3) document.getElementById('timerDisplay').classList.add('timer-warning');
-    else document.getElementById('timerDisplay').classList.remove('timer-warning');
     if (timeLeft <= 0) { clearInterval(timer); skipQuestion(); }
   }, 1000);
 }
@@ -103,18 +107,17 @@ function nextQuestion() {
   if (currentQuestion >= quizData.questions.length) {
     document.getElementById('quizScreen').classList.add('hidden');
     document.getElementById('thankYouScreen').classList.remove('hidden');
+    document.getElementById('certificateDate').textContent = quizData.quizEndDate;
     submitToGoogleSheets();
   } else { loadQuestion(); startTimer(); }
 }
 
 function submitToGoogleSheets() {
-  const name = prompt("Enter your name:");
-  if (!name) return;
   fetch(GOOGLE_SHEET_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      name,
+      ...userDetails,
       score: answers.filter(a => a.correct).length,
       total: quizData.questions.length,
       answers: answers.map((a, i) => ({
@@ -122,29 +125,16 @@ function submitToGoogleSheets() {
         correct: a.correct
       }))
     })
-  })
-  .then(res => res.json())
-  .then(d => console.log('Submitted:', d))
-  .catch(err => console.error('Error:', err));
+  });
 }
 
-function updateWelcomeScreen() { document.getElementById('welcomeTitle').textContent = "🧠 " + quizData.title; }
-
-window.addEventListener("DOMContentLoaded", () => {
-  fetch(GOOGLE_SHEET_URL)
-    .then(response => response.json())
-    .then(data => {
-      quizData.questions = data.questions;
-      quizData.title = data.title;
-      quizData.timer = data.timer;
-      document.getElementById('totalQuestions').textContent = quizData.questions.length;
-      updateWelcomeScreen();
-    })
-    .catch(error => {
-      alert("❌ Failed to load quiz data. Check your Google Sheets URL.");
-      console.error(error);
-    });
-});
+fetch(GOOGLE_SHEET_URL)
+  .then(r => r.json())
+  .then(data => {
+    quizData = data;
+    if (quizData.postalRequired) document.getElementById('postal').classList.remove('hidden');
+    document.getElementById('welcomeTitle').textContent = "🧠 " + quizData.title;
+  });
 </script>
 </body>
 </html>
