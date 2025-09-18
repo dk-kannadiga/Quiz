@@ -19,7 +19,7 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .3);
             max-width: 600px;
             width: 100%;
             padding: 40px;
@@ -114,43 +114,43 @@
     <div class="container">
         <!-- Welcome Page -->
         <div class="page active" id="welcomePage">
-            <h1>Welcome to the Quiz!</h1>
-            <img src="https://via.placeholder.com/600x300/667eea/ffffff?text=Quiz+Banner" alt="Quiz Banner" class="welcome-image" id="quizBanner">
-            <p style="text-align:center;color:#666;margin:20px 0;">Please read the terms and conditions shown in the image above before proceeding.</p>
+            <h1>ಸ್ವಾಗತ!!</h1>
+            <img src="https://drive.google.com/file/d/1khiQ1lp3vCnvwnqft0l5Iq18n_vAndED/view?usp=drive_link" alt="Quiz Banner" class="welcome-image" id="quizBanner">
+            <p style="text-align:center;color:#666;margin:20px 0;">ನಮಸ್ಕಾರ. ಕ್ವಿಜ್‌ಗೆ ಸ್ವಾಗತ</p>
             <div style="text-align:center;">
-                <button class="btn" onclick="showPage('registrationPage')">Continue</button>
+                <button class="btn" onclick="showPage('registrationPage')">ಮುಂದುವರೆಯಿರಿ</button>
             </div>
         </div>
         <!-- Registration Page -->
         <div class="page" id="registrationPage">
-            <h2>Registration</h2>
+            <h2>ನೋಂದಣಿ</h2>
             <div class="progress-bar">
                 <div class="progress-fill" style="width: 33%;"></div>
             </div>
             <form id="registrationForm">
                 <div class="form-group">
-                    <label for="name">Name *</label>
+                    <label for="name">ಹೆಸರು *</label>
                     <input type="text" id="name" required>
                 </div>
                 <div class="form-group">
-                    <label for="email">Email ID *</label>
+                    <label for="email">ಮಿಂಚೆ ವಿಳಾಸ *</label>
                     <input type="email" id="email" required>
                 </div>
                 <div class="form-group">
-                    <label for="phone">Phone Number *</label>
+                    <label for="phone">ಸಂಪರ್ಕ ಸಂಖ್ಯೆ *</label>
                     <input type="tel" id="phone" required>
                 </div>
                 <div class="form-group" id="addressField" style="display: none;">
-                    <label for="address">Postal Address</label>
+                    <label for="address">ಮನೆ ವಿಳಾಸ</label>
                     <textarea id="address" rows="3"></textarea>
                 </div>
-                <button type="submit" class="btn">Continue</button>
+                <button type="submit" class="btn">ಮುಂದುವರೆಯಿರಿ</button>
             </form>
         </div>
         <!-- Quiz Page -->
         <div class="page" id="quizPage">
-            <div class="timer" id="timer">10</div>
-            <h2 id="questionNumber">Question 1 of 5</h2>
+            <div class="timer" id="timer">0</div>
+            <h2 id="questionNumber">5 ರಲ್ಲಿ 1ನೇ ಪ್ರಶ್ನೆ</h2>
             <div class="progress-bar">
                 <div class="progress-fill" id="quizProgress" style="width: 50%;"></div>
             </div>
@@ -161,29 +161,29 @@
                 </div>
             </div>
             <div style="text-align:center;">
-                <button class="btn" onclick="submitAnswer()">Submit</button>
-                <button class="btn btn-secondary" onclick="skipQuestion()">Skip</button>
+                <button class="btn" onclick="submitAnswer()">ಸಲ್ಲಿಸಿ</button>
+                <button class="btn btn-secondary" onclick="skipQuestion()">ಬಿಟ್ಟುಬಿಡಿ</button>
             </div>
         </div>
         <!-- Thank You Page -->
         <div class="page" id="thankYouPage">
-            <h2>Thank You for Participating!</h2>
+            <h2>ಕ್ವಿಜ್‌ನಲ್ಲಿ ಭಾಗವಹಿಸಿದ್ದಕ್ಕೆ ಅಭಿನಂದನೆಗಳು!!</h2>
             <div style="text-align: center; padding: 20px;">
                 <div style="font-size: 60px; margin-bottom: 20px;">🎉</div>
                 <p style="color: #666; line-height: 1.6;">
-                    Your answers have been recorded successfully.<br><br>
-                    Your E-Certificate will be reviewed and shared to your provided email on:<br>
-                    <strong id="endDateTime">December 31, 2024, 5:00 PM</strong>
+                    ನಿಮ್ಮ ಉತ್ತರಗಳನ್ನು ದಾಖಲಿಸಿಕೊಳ್ಳಲಾಗಿದೆ.<br><br>
+                    ನಿಮ್ಮ ಇ-ಪ್ರಮಾಣಪತ್ರವನ್ನು<br>
+                    <strong id="endDateTime">December 31, 2024, 5:00 PM</strong>ರಂದು ನೀವು ದಾಖಲಿಸಿರುವ ಮಿಂಚೆ ವಿಳಾಸಕ್ಕೆ ಕಳುಹಿಸಲಾಗುವುದು.
                 </p>
-                <button class="btn" onclick="location.reload()">Take Another Quiz</button>
+                <button class="btn" onclick="location.reload()">ಇನ್ನೊಂದು ಆಟ ಆಡಿ!</button>
             </div>
         </div>
     </div>
     <!-- Alert Modal -->
     <div class="modal" id="alertModal">
         <div class="modal-content">
-            <p id="alertMessage">Please select an option before submitting!</p>
-            <button class="btn" onclick="closeAlert()">OK</button>
+            <p id="alertMessage">ಸಲ್ಲಿಸುವ ಮೊದಲು ಒಂದು ಆಯ್ಕೆಯನ್ನು ಆರಿಸಿ</p>
+            <button class="btn" onclick="closeAlert()">ಸರಿ</button>
         </div>
     </div>
     <script>
@@ -196,37 +196,32 @@
         ############# */
 
         let quizConfig = {
-            bannerUrl: 'https://via.placeholder.com/600x300/667eea/ffffff?text=Quiz+Banner',
-            includeAddress: false, // set to true if postal address is needed
+            bannerUrl: 'https://drive.google.com/file/d/1khiQ1lp3vCnvwnqft0l5Iq18n_vAndED/view?usp=drive_link',
+            includeAddress: true, // set to true if postal address is needed
             timerSeconds: 10,
-            endDateTime: 'December 31, 2024, 5:00 PM',
+            endDateTime: 'ಡಿಸೆಂಬರ್ 31, 2025, 10:00 PM',
             webhookUrl: 'https://script.google.com/macros/s/AKfycbwyxasu0hQg9J-QUJCyb3oWMKumuDTvBslcWNQrmCqlh430MJnpaTHb9W8rQ052HI76Aw/exec', // PASTE YOUR GOOGLE SCRIPT WEBHOOK URL HERE
             questions: [
                 {
-                    question: "What is the capital of France?",
-                    options: ["London", "Berlin", "Paris", "Madrid"],
-                    correct: 2
-                },
-                {
-                    question: "Which planet is known as the Red Planet?",
-                    options: ["Venus", "Mars", "Jupiter", "Saturn"],
+                    question: "ಮಾದರಿ ಪ್ರಶ್ನೆ ೧",
+                    options: ["ಉತ್ತರ ಅ (ಸರಿ)", "ಉತ್ತರ ಆ", "ಉತ್ತರ ಇ", "ಉತ್ತರ ಈ"],
                     correct: 1
                 },
                 {
-                    question: "What is 2 + 2?",
-                    options: ["3", "4", "5", "6"],
-                    correct: 1
-                },
-                {
-                    question: "Who painted the Mona Lisa?",
-                    options: ["Van Gogh", "Picasso", "Leonardo da Vinci", "Michelangelo"],
+                    question: "ಮಾದರಿ ಪ್ರಶ್ನೆ ೨",
+                    options: ["ಉತ್ತರ ಅ", "ಉತ್ತರ ಆ (ಸರಿ)", "ಉತ್ತರ ಇ", "ಉತ್ತರ ಈ"],
                     correct: 2
                 },
                 {
-                    question: "What is the largest ocean on Earth?",
-                    options: ["Atlantic", "Indian", "Arctic", "Pacific"],
+                    question: "ಮಾದರಿ ಪ್ರಶ್ನೆ ೩",
+                    options: ["ಉತ್ತರ ಅ", "ಉತ್ತರ ಆ", "ಉತ್ತರ ಇ (ಸರಿ)", "ಉತ್ತರ ಈ"],
                     correct: 3
-                }
+                },
+                {
+                    question: "ಮಾದರಿ ಪ್ರಶ್ನೆ ೪",
+                    options: ["ಉತ್ತರ ಅ", "ಉತ್ತರ ಆ", "ಉತ್ತರ ಇ", "ಉತ್ತರ ಈ (ಸರಿ)"],
+                    correct: 4
+                },
             ]
         };
 
@@ -287,7 +282,7 @@
             }
             const q = quizConfig.questions[currentQuestion];
             document.getElementById('questionNumber').textContent = 
-                `Question ${currentQuestion + 1} of ${quizConfig.questions.length}`;
+                `${quizConfig.questions.length}ರಲ್ಲಿ ${currentQuestion + 1}ನೇ ಪ್ರಶ್ನೆ`;
             document.getElementById('questionText').textContent = q.question;
 
             // Update progress
@@ -342,7 +337,7 @@
         }
         function submitAnswer() {
             if (selectedOption === null) {
-                showAlert('Please select an option before submitting!');
+                showAlert('ಸಲ್ಲಿಸುವ ಮುನ್ನ ಒಂದು ಆಯ್ಕೆಯನ್ನು ಆರಿಸಿ');
                 return;
             }
             clearInterval(timerInterval);
