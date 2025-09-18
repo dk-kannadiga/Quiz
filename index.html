@@ -1,140 +1,756 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Knowledge Challenge Quiz</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1, h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .welcome-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .timer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ff6b6b;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+        }
+
+        .options {
+            margin: 20px 0;
+        }
+
+        .option {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .option:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #764ba2;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 400px;
+            text-align: center;
+            animation: bounceIn 0.5s;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .admin-panel {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        #questionsConfig {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .admin-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 999;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-800 min-h-screen text-white">
-  <!-- Registration Screen -->
-  <div id="welcomeScreen" class="min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl max-w-lg w-full p-8 fade-in">
-      <h1 class="text-3xl font-bold mb-4" id="welcomeTitle">🧠 Knowledge Challenge Quiz</h1>
-      <form id="registrationForm" class="space-y-4">
-        <input type="text" id="name" placeholder="Full Name" required class="w-full p-3 rounded text-black" />
-        <input type="email" id="email" placeholder="Email" required class="w-full p-3 rounded text-black" />
-        <input type="tel" id="phone" placeholder="Phone Number" required class="w-full p-3 rounded text-black" />
-        <input type="text" id="postal" placeholder="Postal Address" class="w-full p-3 rounded text-black hidden" />
-        <div class="bg-white/5 p-3 rounded text-sm">
-          <label><input type="checkbox" id="terms" required> I agree to the Terms & Conditions</label>
+<body>
+    <div class="container">
+        <!-- Welcome Page -->
+        <div class="page active" id="welcomePage">
+            <h1>Welcome to the Quiz!</h1>
+            <img src="https://via.placeholder.com/600x300/667eea/ffffff?text=Quiz+Banner" alt="Quiz Banner" class="welcome-image" id="quizBanner">
+            <p style="text-align: center; color: #666; margin: 20px 0;">Please read the terms and conditions shown in the image above before proceeding.</p>
+            <div style="text-align: center;">
+                <button class="btn" onclick="showPage('registrationPage')">Continue</button>
+            </div>
         </div>
-        <button type="submit" class="w-full bg-green-500 hover:bg-green-600 p-3 rounded font-bold">Start Quiz 🚀</button>
-      </form>
+
+        <!-- Registration Page -->
+        <div class="page" id="registrationPage">
+            <h2>Registration</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 33%;"></div>
+            </div>
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="name">Name *</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email ID *</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                <div class="form-group" id="addressField" style="display: none;">
+                    <label for="address">Postal Address</label>
+                    <textarea id="address" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn">Continue</button>
+            </form>
+        </div>
+
+        <!-- Quiz Page -->
+        <div class="page" id="quizPage">
+            <div class="timer" id="timer">10</div>
+            <h2 id="questionNumber">Question 1 of 5</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="quizProgress" style="width: 50%;"></div>
+            </div>
+            <div class="question-container">
+                <h3 id="questionText">Sample Question?</h3>
+                <div class="options" id="optionsContainer">
+                    <!-- Options will be dynamically added -->
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <button class="btn" onclick="submitAnswer()">Submit</button>
+                <button class="btn btn-secondary" onclick="skipQuestion()">Skip</button>
+            </div>
+        </div>
+
+        <!-- Thank You Page -->
+        <div class="page" id="thankYouPage">
+            <h2>Thank You for Participating!</h2>
+            <div style="text-align: center; padding: 20px;">
+                <div style="font-size: 60px; margin-bottom: 20px;">🎉</div>
+                <p style="color: #666; line-height: 1.6;">
+                    Your answers have been recorded successfully.<br><br>
+                    Your E-Certificate will be reviewed and shared to your provided email on:<br>
+                    <strong id="endDateTime">December 31, 2024, 5:00 PM</strong>
+                </p>
+                <button class="btn" onclick="location.reload()">Take Another Quiz</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Quiz Screen -->
-  <div id="quizScreen" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
-    <div class="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl max-w-3xl w-full p-8">
-      <div class="flex justify-between items-center mb-6">
-        <div>Question <span id="currentQuestionNum">1</span> of <span id="totalQuestions">0</span></div>
-        <div id="timerDisplay" class="bg-red-500 px-4 py-2 rounded-full font-bold">⏰ <span id="timeLeft">10</span>s</div>
-      </div>
-      <h3 id="questionText" class="text-2xl font-bold mb-6">Loading question...</h3>
-      <div id="optionsContainer" class="space-y-4"></div>
-      <div class="flex justify-between mt-6">
-        <button onclick="skipQuestion()" class="bg-gray-500 px-6 py-3 rounded">Skip ⏭️</button>
-        <button onclick="submitAnswer()" class="bg-green-500 px-8 py-3 rounded">Submit ✅</button>
-      </div>
+    <!-- Admin Panel Button -->
+    <div class="admin-btn" onclick="toggleAdmin()">Admin</div>
+
+    <!-- Admin Panel Modal -->
+    <div class="modal" id="adminModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2>Admin Panel</h2>
+            <div class="admin-panel">
+                <h3>Quiz Configuration</h3>
+                
+                <div class="form-group">
+                    <label>Quiz Banner Image URL:</label>
+                    <input type="text" id="adminBannerUrl" placeholder="Enter image URL">
+                </div>
+                
+                <div class="form-group">
+                    <label>Include Postal Address?</label>
+                    <select id="adminPostalAddress">
+                        <option value="no">No</option>
+                        <option value="yes">Yes (Physical Prize)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Timer (seconds):</label>
+                    <input type="number" id="adminTimer" value="10" min="5" max="60">
+                </div>
+                
+                <div class="form-group">
+                    <label>Certificate End Date & Time:</label>
+                    <input type="text" id="adminEndDateTime" placeholder="December 31, 2024, 5:00 PM">
+                </div>
+                
+                <div class="form-group">
+                    <label>Google Sheets Webhook URL:</label>
+                    <input type="text" id="adminWebhookUrl" placeholder="Enter your Google Apps Script URL">
+                </div>
+                
+                <h3>Quiz Questions</h3>
+                <div id="questionsConfig">
+                    <!-- Questions will be added here -->
+                </div>
+                <button class="btn" onclick="addQuestion()">Add Question</button>
+                
+                <div style="margin-top: 20px;">
+                    <button class="btn" onclick="saveConfig()">Save Configuration</button>
+                    <button class="btn btn-secondary" onclick="closeAdmin()">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Thank You Screen -->
-  <div id="thankYouScreen" class="hidden min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl max-w-lg w-full p-8 text-center">
-      <h2 class="text-3xl font-bold mb-4">🎉 Thank You for Participating!</h2>
-      <p>Your answers will be reviewed and you will receive your e-certificate on <span id="certificateDate"></span>.</p>
+    <!-- Alert Modal -->
+    <div class="modal" id="alertModal">
+        <div class="modal-content">
+            <p id="alertMessage">Please select an option before submitting!</p>
+            <button class="btn" onclick="closeAlert()">OK</button>
+        </div>
     </div>
-  </div>
 
-<script>
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyaVRibw8DpIXkKDK2E-LnB98NDrhboTgb3QJD2MCPpCCas0WeoQgTgcHfg4ntHSyS4yw/exec";
-let quizData = {};
-let currentQuestion = 0, selectedAnswer = null, timer = null, timeLeft = 0, answers = [], userDetails = {};
+    <script>
+        // Quiz Configuration
+        let quizConfig = {
+            bannerUrl: 'https://via.placeholder.com/600x300/667eea/ffffff?text=Quiz+Banner',
+            includeAddress: false,
+            timerSeconds: 10,
+            endDateTime: 'December 31, 2024, 5:00 PM',
+            webhookUrl: '',
+            questions: [
+                {
+                    question: "What is the capital of France?",
+                    options: ["London", "Berlin", "Paris", "Madrid"],
+                    correct: 2
+                },
+                {
+                    question: "Which planet is known as the Red Planet?",
+                    options: ["Venus", "Mars", "Jupiter", "Saturn"],
+                    correct: 1
+                },
+                {
+                    question: "What is 2 + 2?",
+                    options: ["3", "4", "5", "6"],
+                    correct: 1
+                },
+                {
+                    question: "Who painted the Mona Lisa?",
+                    options: ["Van Gogh", "Picasso", "Leonardo da Vinci", "Michelangelo"],
+                    correct: 2
+                },
+                {
+                    question: "What is the largest ocean on Earth?",
+                    options: ["Atlantic", "Indian", "Arctic", "Pacific"],
+                    correct: 3
+                }
+            ]
+        };
 
-document.getElementById('registrationForm').addEventListener('submit', e => {
-  e.preventDefault();
-  userDetails.name = document.getElementById('name').value;
-  userDetails.email = document.getElementById('email').value;
-  userDetails.phone = document.getElementById('phone').value;
-  if (quizData.postalRequired) userDetails.postalAddress = document.getElementById('postal').value;
-  document.getElementById('welcomeScreen').classList.add('hidden');
-  document.getElementById('quizScreen').classList.remove('hidden');
-  loadQuestion();
-  startTimer();
-});
+        // Quiz State
+        let currentQuestion = 0;
+        let userAnswers = [];
+        let timerInterval;
+        let currentTimer;
+        let selectedOption = null;
+        let userData = {};
 
-function loadQuestion() {
-  const q = quizData.questions[currentQuestion];
-  document.getElementById('currentQuestionNum').textContent = currentQuestion + 1;
-  document.getElementById('totalQuestions').textContent = quizData.questions.length;
-  document.getElementById('questionText').textContent = q.question;
-  const container = document.getElementById('optionsContainer');
-  container.innerHTML = "";
-  q.options.forEach((opt, i) => {
-    const btn = document.createElement('button');
-    btn.textContent = opt;
-    btn.className = "block w-full bg-white text-black p-2 rounded";
-    btn.onclick = () => { selectedAnswer = i; [...container.children].forEach(c => c.classList.remove("bg-blue-300")); btn.classList.add("bg-blue-300"); };
-    container.appendChild(btn);
-  });
-}
+        // Load config from localStorage
+        function loadConfig() {
+            const saved = localStorage.getItem('quizConfig');
+            if (saved) {
+                quizConfig = JSON.parse(saved);
+                applyConfig();
+            }
+        }
 
-function startTimer() {
-  clearInterval(timer);
-  timeLeft = quizData.timer;
-  document.getElementById('timeLeft').textContent = timeLeft;
-  timer = setInterval(() => {
-    timeLeft--;
-    document.getElementById('timeLeft').textContent = timeLeft;
-    if (timeLeft <= 0) { clearInterval(timer); skipQuestion(); }
-  }, 1000);
-}
+        function applyConfig() {
+            document.getElementById('quizBanner').src = quizConfig.bannerUrl;
+            document.getElementById('addressField').style.display = 
+                quizConfig.includeAddress ? 'block' : 'none';
+            document.getElementById('endDateTime').textContent = quizConfig.endDateTime;
+        }
 
-function submitAnswer() {
-  if (selectedAnswer === null) return;
-  const correct = quizData.questions[currentQuestion].correct === selectedAnswer;
-  answers.push({ selectedAnswer, correct });
-  nextQuestion();
-}
+        // Page Navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            
+            if (pageId === 'quizPage') {
+                showQuestion();
+            }
+        }
 
-function skipQuestion() { answers.push({ selectedAnswer: null, correct: false }); nextQuestion(); }
+        // Registration
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            userData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value || 'N/A',
+                timestamp: new Date().toISOString()
+            };
+            showPage('quizPage');
+        });
 
-function nextQuestion() {
-  clearInterval(timer);
-  currentQuestion++;
-  if (currentQuestion >= quizData.questions.length) {
-    document.getElementById('quizScreen').classList.add('hidden');
-    document.getElementById('thankYouScreen').classList.remove('hidden');
-    document.getElementById('certificateDate').textContent = quizData.quizEndDate;
-    submitToGoogleSheets();
-  } else { loadQuestion(); startTimer(); }
-}
+        // Quiz Functions
+        function showQuestion() {
+            if (currentQuestion >= quizConfig.questions.length) {
+                submitQuizResults();
+                return;
+            }
 
-function submitToGoogleSheets() {
-  fetch(GOOGLE_SHEET_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      ...userDetails,
-      score: answers.filter(a => a.correct).length,
-      total: quizData.questions.length,
-      answers: answers.map((a, i) => ({
-        selectedOption: a.selectedAnswer !== null ? quizData.questions[i].options[a.selectedAnswer] : 'Skipped',
-        correct: a.correct
-      }))
-    })
-  });
-}
+            const q = quizConfig.questions[currentQuestion];
+            document.getElementById('questionNumber').textContent = 
+                `Question ${currentQuestion + 1} of ${quizConfig.questions.length}`;
+            document.getElementById('questionText').textContent = q.question;
+            
+            // Update progress
+            const progress = ((currentQuestion + 1) / quizConfig.questions.length) * 100;
+            document.getElementById('quizProgress').style.width = progress + '%';
+            
+            // Clear and populate options
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+            selectedOption = null;
+            
+            q.options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.innerHTML = `
+                    <input type="radio" name="option" value="${index}" id="opt${index}">
+                    <label for="opt${index}" style="cursor: pointer; margin: 0;">${option}</label>
+                `;
+                div.onclick = () => selectOption(index, div);
+                container.appendChild(div);
+            });
+            
+            startTimer();
+        }
 
-fetch(GOOGLE_SHEET_URL)
-  .then(r => r.json())
-  .then(data => {
-    quizData = data;
-    if (quizData.postalRequired) document.getElementById('postal').classList.remove('hidden');
-    document.getElementById('welcomeTitle').textContent = "🧠 " + quizData.title;
-  });
-</script>
+        function selectOption(index, element) {
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedOption = index;
+            document.querySelector(`#opt${index}`).checked = true;
+        }
+
+        function startTimer() {
+            currentTimer = quizConfig.timerSeconds;
+            document.getElementById('timer').textContent = currentTimer;
+            
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                currentTimer--;
+                document.getElementById('timer').textContent = currentTimer;
+                
+                if (currentTimer <= 0) {
+                    clearInterval(timerInterval);
+                    // Auto-submit or skip
+                    if (selectedOption !== null) {
+                        recordAnswer(selectedOption);
+                    } else {
+                        recordAnswer('skipped');
+                    }
+                    nextQuestion();
+                }
+            }, 1000);
+        }
+
+        function submitAnswer() {
+            if (selectedOption === null) {
+                showAlert('Please select an option before submitting!');
+                return;
+            }
+            clearInterval(timerInterval);
+            recordAnswer(selectedOption);
+            nextQuestion();
+        }
+
+        function skipQuestion() {
+            clearInterval(timerInterval);
+            recordAnswer('skipped');
+            nextQuestion();
+        }
+
+        function recordAnswer(answer) {
+            userAnswers.push({
+                question: currentQuestion,
+                answer: answer,
+                timeRemaining: currentTimer
+            });
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < quizConfig.questions.length) {
+                showQuestion();
+            } else {
+                submitQuizResults();
+            }
+        }
+
+        function submitQuizResults() {
+            clearInterval(timerInterval);
+            
+            // Prepare data for Google Sheets
+            const quizData = {
+                ...userData,
+                answers: userAnswers,
+                score: calculateScore(),
+                completedAt: new Date().toISOString()
+            };
+            
+            // Send to Google Sheets (if webhook URL is configured)
+            if (quizConfig.webhookUrl) {
+                fetch(quizConfig.webhookUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(quizData)
+                }).catch(err => console.log('Error submitting to Google Sheets:', err));
+            }
+            
+            // Store locally as backup
+            const submissions = JSON.parse(localStorage.getItem('quizSubmissions') || '[]');
+            submissions.push(quizData);
+            localStorage.setItem('quizSubmissions', JSON.stringify(submissions));
+            
+            showPage('thankYouPage');
+        }
+
+        function calculateScore() {
+            let score = 0;
+            userAnswers.forEach((answer, index) => {
+                if (answer.answer === quizConfig.questions[index].correct) {
+                    score++;
+                }
+            });
+            return score;
+        }
+
+        // Alert Functions
+        function showAlert(message) {
+            document.getElementById('alertMessage').textContent = message;
+            document.getElementById('alertModal').classList.add('active');
+        }
+
+        function closeAlert() {
+            document.getElementById('alertModal').classList.remove('active');
+        }
+
+        // Admin Functions
+        function toggleAdmin() {
+            const password = prompt('Enter admin password:');
+            if (password === 'admin123') { // Change this password
+                loadAdminPanel();
+                document.getElementById('adminModal').classList.add('active');
+            } else if (password) {
+                alert('Incorrect password!');
+            }
+        }
+
+        function loadAdminPanel() {
+            document.getElementById('adminBannerUrl').value = quizConfig.bannerUrl;
+            document.getElementById('adminPostalAddress').value = quizConfig.includeAddress ? 'yes' : 'no';
+            document.getElementById('adminTimer').value = quizConfig.timerSeconds;
+            document.getElementById('adminEndDateTime').value = quizConfig.endDateTime;
+            document.getElementById('adminWebhookUrl').value = quizConfig.webhookUrl || '';
+            
+            // Load questions
+            const container = document.getElementById('questionsConfig');
+            container.innerHTML = '';
+            quizConfig.questions.forEach((q, index) => {
+                addQuestionToAdmin(q, index);
+            });
+        }
+
+        function addQuestionToAdmin(q, index) {
+            const container = document.getElementById('questionsConfig');
+            const div = document.createElement('div');
+            div.className = 'form-group';
+            div.style.background = '#fff';
+            div.style.padding = '10px';
+            div.style.marginBottom = '10px';
+            div.style.borderRadius = '5px';
+            
+            div.innerHTML = `
+                <label>Question ${index + 1}:</label>
+                <input type="text" class="q-text" value="${q ? q.question : ''}" placeholder="Enter question">
+                <div style="margin-top: 10px;">
+                    <input type="text" class="q-opt1" value="${q ? q.options[0] : ''}" placeholder="Option 1" style="width: 45%; margin-right: 5%;">
+                    <input type="text" class="q-opt2" value="${q ? q.options[1] : ''}" placeholder="Option 2" style="width: 45%;">
+                </div>
+                <div style="margin-top: 5px;">
+                    <input type="text" class="q-opt3" value="${q ? q.options[2] : ''}" placeholder="Option 3" style="width: 45%; margin-right: 5%;">
+                    <input type="text" class="q-opt4" value="${q ? q.options[3] : ''}" placeholder="Option 4" style="width: 45%;">
+                </div>
+                <div style="margin-top: 10px;">
+                    <label>Correct Answer:</label>
+                    <select class="q-correct">
+                        <option value="0" ${q && q.correct === 0 ? 'selected' : ''}>Option 1</option>
+                        <option value="1" ${q && q.correct === 1 ? 'selected' : ''}>Option 2</option>
+                        <option value="2" ${q && q.correct === 2 ? 'selected' : ''}>Option 3</option>
+                        <option value="3" ${q && q.correct === 3 ? 'selected' : ''}>Option 4</option>
+                    </select>
+                    <button class="btn btn-secondary" style="float: right;" onclick="this.parentElement.parentElement.remove()">Remove</button>
+                </div>
+            `;
+            
+            container.appendChild(div);
+        }
+
+        function addQuestion() {
+            addQuestionToAdmin(null, document.getElementById('questionsConfig').children.length);
+        }
+
+        function saveConfig() {
+            // Save basic config
+            quizConfig.bannerUrl = document.getElementById('adminBannerUrl').value;
+            quizConfig.includeAddress = document.getElementById('adminPostalAddress').value === 'yes';
+            quizConfig.timerSeconds = parseInt(document.getElementById('adminTimer').value);
+            quizConfig.endDateTime = document.getElementById('adminEndDateTime').value;
+            quizConfig.webhookUrl = document.getElementById('adminWebhookUrl').value;
+            
+            // Save questions
+            quizConfig.questions = [];
+            const questionDivs = document.getElementById('questionsConfig').children;
+            
+            for (let div of questionDivs) {
+                const question = {
+                    question: div.querySelector('.q-text').value,
+                    options: [
+                        div.querySelector('.q-opt1').value,
+                        div.querySelector('.q-opt2').value,
+                        div.querySelector('.q-opt3').value,
+                        div.querySelector('.q-opt4').value
+                    ],
+                    correct: parseInt(div.querySelector('.q-correct').value)
+                };
+                if (question.question) {
+                    quizConfig.questions.push(question);
+                }
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('quizConfig', JSON.stringify(quizConfig));
+            
+            // Apply config
+            applyConfig();
+            
+            alert('Configuration saved successfully!');
+            closeAdmin();
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminModal').classList.remove('active');
+        }
+
+        function exportSubmissions() {
+            const submissions = JSON.parse(localStorage.getItem('quizSubmissions') || '[]');
+            const dataStr = JSON.stringify(submissions, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = 'quiz_submissions.json';
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+
+        // Initialize
+        loadConfig();
+    </script>
 </body>
 </html>
