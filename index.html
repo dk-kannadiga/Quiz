@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ಕನ್ನಡ ಕ್ವಿಜ್ ಜಗತ್ತು</title>
+		<link href="https://fonts.googleapis.com/css2?family=Anek+Kannada:wght@400;700&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Baloo+Tamma:wght@400;700&display=swap" rel="stylesheet">
+
+  <title>ಕನ್ನಡ ಕ್ವಿಜ್ ಜಗತ್ತು</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: 'Anek Kannada';
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -49,8 +52,9 @@
         .btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white; padding: 12px 30px;
-            border: none; border-radius: 8px; font-size: 16px; cursor: pointer;
+            border: none; border-radius: 8px; font-size: 20px; cursor: pointer;
             transition: all 0.3s; display: inline-block; margin: 10px 5px;
+          	font-family: 'Baloo Tamma';
         }
         .btn:hover {
             transform: translateY(-2px);
@@ -101,12 +105,12 @@
             background:white; padding:30px; border-radius:10px;
             max-width:400px; text-align:center; animation:bounceIn 0.5s;
             max-height:90vh; overflow-y:auto; position:relative;
-        }
+      }
         @keyframes bounceIn {
             0%{transform:scale(0.3);opacity:0;}
             50%{transform:scale(1.05);}
             70%{transform:scale(0.9);}
-            100%{transform:scale(1);opacity:1;}
+            100%{transform:scale(1);opacity:1;}Btn
         }
     </style>
 </head>
@@ -115,9 +119,13 @@
         <!-- Welcome Page -->
         <div class="page active" id="welcomePage">
             <h1>ಸ್ವಾಗತ!!</h1>
-            <img src="https://drive.google.com/file/d/1khiQ1lp3vCnvwnqft0l5Iq18n_vAndED/view?usp=drive_link" alt="Quiz Banner" class="welcome-image" id="quizBanner">
-            <p style="text-align:center;color:#666;margin:20px 0;">ನಮಸ್ಕಾರ. ಕ್ವಿಜ್‌ಗೆ ಸ್ವಾಗತ</p>
-            <div style="text-align:center;">
+            <img id="quizBanner"
+                 src="https://drive.google.com/thumbnail?id=1khiQ1lp3vCnvwnqft0l5Iq18n_vAndED"
+                 alt="Quiz Banner"
+                 class="welcome-image">
+          <p style="text-align:center;font-weight:Bold;font-size:30px;color:#000000;margin:20px 0;">ನಮಸ್ಕಾರ🙏
+          <p style="text-align:center;font-weight:0;font-size:25px;color:#000000;margin:20px 0;"> ಕ್ವಿಜ್‌ಗೆ ಸ್ವಾಗತ</p>
+            <div style="text-align:center">
                 <button class="btn" onclick="showPage('registrationPage')">ಮುಂದುವರೆಯಿರಿ</button>
             </div>
         </div>
@@ -129,22 +137,24 @@
             </div>
             <form id="registrationForm">
                 <div class="form-group">
-                    <label for="name">ಹೆಸರು *</label>
+                    <label for="name">ಹೆಸರು (Name) *</label>
                     <input type="text" id="name" required>
                 </div>
                 <div class="form-group">
-                    <label for="email">ಮಿಂಚೆ ವಿಳಾಸ *</label>
+                    <label for="email">ಮಿಂಚೆ ವಿಳಾಸ (email ID) *</label>
                     <input type="email" id="email" required>
                 </div>
                 <div class="form-group">
-                    <label for="phone">ಸಂಪರ್ಕ ಸಂಖ್ಯೆ *</label>
+                  <label for="phone">ಸಂಪರ್ಕ ಸಂಖ್ಯೆ (Phone Number)*</label>
                     <input type="tel" id="phone" required>
                 </div>
                 <div class="form-group" id="addressField" style="display: none;">
-                    <label for="address">ಮನೆ ವಿಳಾಸ</label>
+                    <label for="address">ಮನೆ ವಿಳಾಸ (Postal Address)*</label>
                     <textarea id="address" rows="3"></textarea>
                 </div>
+              <div style="text-align:center">
                 <button type="submit" class="btn">ಮುಂದುವರೆಯಿರಿ</button>
+              </div>
             </form>
         </div>
         <!-- Quiz Page -->
@@ -196,7 +206,7 @@
         ############# */
 
         let quizConfig = {
-            bannerUrl: 'https://drive.google.com/file/d/1khiQ1lp3vCnvwnqft0l5Iq18n_vAndED/view?usp=drive_link',
+           bannerUrl: 'https://drive.google.com/thumbnail?id=1khiQ1lp3vCnvwnqft0l5Iq18n_vAndED',
             includeAddress: true, // set to true if postal address is needed
             timerSeconds: 10,
             endDateTime: 'ಡಿಸೆಂಬರ್ 31, 2025, 10:00 PM',
@@ -248,6 +258,8 @@
             document.getElementById('addressField').style.display = 
                 quizConfig.includeAddress ? 'block' : 'none';
             document.getElementById('endDateTime').textContent = quizConfig.endDateTime;
+           // ✅ Make postal address required only if includeAddress is true
+    document.getElementById('address').required = quizConfig.includeAddress;
         }
 
         // Page Navigation
