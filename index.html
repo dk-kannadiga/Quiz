@@ -406,8 +406,8 @@
         }
         function calculateScore() {
             let score = 0;
-            userAnswers.forEach((answer, index) => {
-                if (answer.answer === quizConfig.questions[index].correct) {
+            userAnswers.forEach((ans, index) => {
+                if (ans.a === quizConfig.questions[index].correct) {
                     score++;
                 }
             });
