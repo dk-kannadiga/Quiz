@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <link href="https://fonts.googleapis.com/css2?family=Anek+Kannada:wght@400;700&display=swap" rel="stylesheet">
-                <link href="https://fonts.googleapis.com/css2?family=Baloo+Tamma:wght@400;700&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Anek+Kannada:wght@400;700&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Baloo+Tamma:wght@400;700&display=swap" rel="stylesheet">
 
   <title>ಕನ್ನಡ ಕ್ವಿಜ್ ಜಗತ್ತು</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Anek Kannada';
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #FFFF00 0%, #FF0000 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -54,7 +54,7 @@
             color: white; padding: 12px 30px;
             border: none; border-radius: 8px; font-size: 20px; cursor: pointer;
             transition: all 0.3s; display: inline-block; margin: 10px 5px;
-                  font-family: 'Baloo Tamma';
+          	font-family: 'Baloo Tamma';
         }
         .btn:hover {
             transform: translateY(-2px);
@@ -183,7 +183,7 @@
                 <p style="color: #666; line-height: 1.6;">
                     ನಿಮ್ಮ ಉತ್ತರಗಳನ್ನು ದಾಖಲಿಸಿಕೊಳ್ಳಲಾಗಿದೆ.<br><br>
                     ನಿಮ್ಮ ಇ-ಪ್ರಮಾಣಪತ್ರವನ್ನು<br>
-                    <strong id="endDateTime">December 31, 2024, 5:00 PM</strong>ರಂದು ನೀವು ದಾಖಲಿಸಿರುವ ಮಿಂಚೆ ವಿಳಾಸಕ್ಕೆ ಕಳುಹಿಸಲಾಗುವುದು.
+                    <strong id="endDateTime"></strong>ನ ನಂತರ ನೀವು ದಾಖಲಿಸಿರುವ ಮಿಂಚೆ ವಿಳಾಸಕ್ಕೆ ಕಳುಹಿಸಲಾಗುವುದು.
                 </p>
                 <button class="btn" onclick="location.reload()">ಇನ್ನೊಂದು ಆಟ ಆಡಿ!</button>
             </div>
@@ -207,30 +207,35 @@
 
         let quizConfig = {
             bannerUrl: 'https://dk-kannadiga.github.io/Quiz/37c62ba0-801e-5cbb-9817-26e7c0828519.jpg',
-            includeAddress: false, // set to true if postal address is needed
+            includeAddress: true, // set to true if postal address is needed
             timerSeconds: 10,
-            endDateTime: 'ಡಿಸೆಂಬರ್ 31, 2025, 10:00 PM',
-            webhookUrl: 'https://script.google.com/macros/s/AKfycbwCwG5sXJupa_zjg6mF5oPcI1bjrtMEYe8ONo5lcVxJKk8UdTjheAnGE5oUgy486d1n8A/exec', // PASTE YOUR GOOGLE SCRIPT WEBHOOK URL HERE
+            endDateTime: 'ನವೆಂಬರ್ 30, 2025, 10:00 PM',
+            webhookUrl: 'https://script.google.com/macros/s/AKfycbwyxasu0hQg9J-QUJCyb3oWMKumuDTvBslcWNQrmCqlh430MJnpaTHb9W8rQ052HI76Aw/exec', // PASTE YOUR GOOGLE SCRIPT WEBHOOK URL HERE
             questions: [
                 {
-                    question: "ಮಾದರಿ ಪ್ರಶ್ನೆ ೧",
-                    options: ["ಉತ್ತರ ಅ (ಸರಿ)", "ಉತ್ತರ ಆ", "ಉತ್ತರ ಇ", "ಉತ್ತರ ಈ"],
+                    question: "ಕರ್ನಾಟಕದ ಬಾವುಟ ಯಾವುದು?",
+                    options: ["ಹಳದಿ - ಕೆಂಪು (ಅರಿಶಿನ ಕುಂಕುಮ)", "ಉದಯಿಸುತ್ತಿರುವ ಸೂರ್ಯ", "ವರಾಹ", "ಗಂಡಭೇರುಂಡ"],
                     correct: 0
                 },
                 {
-                    question: "ಮಾದರಿ ಪ್ರಶ್ನೆ ೨",
-                    options: ["ಉತ್ತರ ಅ", "ಉತ್ತರ ಆ (ಸರಿ)", "ಉತ್ತರ ಇ", "ಉತ್ತರ ಈ"],
+                    question: "ಕರ್ನಾಟಕ ರಾಜ್ಯದ ಅಧಿಕೃತ ಲಾಂಛನ ಯಾವುದು?",
+                    options: ["ಸೂರ್ಯ ಚಂದ್ರ", "ಗಂಡಭೇರುಂಡ ಮತ್ತು ಶರಭ", "ಸಮುದ್ರ ಮತ್ತು ಬೆಟ್ಟಗಳು", "ತೆಂಗಿನ ಮರಗಳು"],
                     correct: 1
                 },
                 {
-                    question: "ಮಾದರಿ ಪ್ರಶ್ನೆ ೩",
-                    options: ["ಉತ್ತರ ಅ", "ಉತ್ತರ ಆ", "ಉತ್ತರ ಇ (ಸರಿ)", "ಉತ್ತರ ಈ"],
+                    question: "ಕರ್ನಾಟಕದ ಅಧಿಕೃತ ನಾಡಗೀತೆಯನ್ನು ರಚಿಸಿದವರು ಯಾರು?",
+                    options: ["ಹುಯಿಲಗೋಳ ನಾರಾಯಣರಾವ್", "ಡಿ ಎಸ್ ಕರ್ಕಿ", "ಕೆ ವಿ ಪುಟ್ಟಪ್ಪ(ಕುವೆಂಪು)", "ಶಿವರಾಮ ಕಾರಂತ"],
                     correct: 2
                 },
                 {
-                    question: "ಮಾದರಿ ಪ್ರಶ್ನೆ ೪",
-                    options: ["ಉತ್ತರ ಅ", "ಉತ್ತರ ಆ", "ಉತ್ತರ ಇ", "ಉತ್ತರ ಈ (ಸರಿ)"],
+                    question: "ಕರ್ನಾಟಕದ ಅಧಿಕೃತ ನಾಡಗೀತೆ ಯಾವುದು?",
+                    options: ["ಉದಯವಾಗಲಿ ನಮ್ಮ ಚೆಲುವ ಕನ್ನಡ ನಾಡು", "ಹಚ್ಚೇವು ಕನ್ನಡದ ದೀಪ", "ತಾಯೆ ಬಾರ ಮೊಗವ ತೋರ", "ಜಯ ಭಾರತ ಜನನಿಯ ತನುಜಾತೆ"],
                     correct: 3
+                },
+                {
+                    question: "ಕರ್ನಾಟಕದ ರಾಜ್ಯವೃಕ್ಷ ಯಾವುದು?",
+                    options: ["ಆಲದ ಮರ", "ಬೇವಿನ ಮರ", "ಶ್ರೀಗಂಧದ ಮರ", " ಅರಳಿ ಮರ"],
+                    correct: 2
                 },
             ]
         };
