@@ -1,542 +1,76 @@
-<!DOCTYPE html>  <html lang="en">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-                <link href="https://fonts.googleapis.com/css2?family=Anek+Kannada:wght@400;700&display=swap" rel="stylesheet">  
-                <link href="https://fonts.googleapis.com/css2?family=Baloo+Tamma:wght@400;700&display=swap" rel="stylesheet">    <title>ಕನ್ನಡ ಕ್ವಿಜ್ ಜಗತ್ತು</title>  
-    <style>  
-        * { margin: 0; padding: 0; box-sizing: border-box; }  
-        body {  
-            font-family: 'Anek Kannada';  
-            background: linear-gradient(135deg, #ffff00 0%, #ff0000 100%);  
-            min-height: 100vh;  
-            display: flex;  
-            align-items: center;  
-            justify-content: center;  
-            padding: 20px;  
-        }  
-        .container {  
-            background: rgba(255, 255, 255, 0.95);  
-            backdrop-filter: blur(10px);  
-            border-radius: 20px;  
-            box-shadow: 0 20px 60px rgba(0, 0, 0, .3);  
-            max-width: 600px;  
-            width: 100%;  
-            padding: 40px;  
-            animation: slideIn 0.5s ease-out;  
-        }  
-        @keyframes slideIn {  
-            from { opacity: 0; transform: translateY(-20px);}  
-            to { opacity:1; transform: none;}  
-        }  
-        h1, h2 { color: #333; margin-bottom: 20px; text-align: center;}  
-        .page { display: none; animation: fadeIn 0.3s ease-in;}  
-        .page.active { display: block;}  
-        @keyframes fadeIn {from{opacity:0;}to{opacity:1;}}  
-        .welcome-image {  
-            width: 100%; max-height: 100%; object-fit: cover;  
-            border-radius: 10px; margin-bottom: 20px;  
-        }  
-        .form-group { margin-bottom: 20px;}  
-        label { display: block; margin-bottom:8px; color:#555; font-weight:500;}  
-        input[type="text"], input[type="email"], input[type="tel"], textarea {  
-            width:100%; padding:12px; border:2px solid #e0e0e0; border-radius:8px; font-size:16px; transition:all .3s;  
-        }  
-        input:focus, textarea:focus {  
-            outline:none; border-color: #667eea;  
-            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);  
-        }  
-        .btn {  
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);  
-            color: white; padding: 12px 30px;  
-            border: none; border-radius: 8px; font-size: 20px; cursor: pointer;  
-            transition: all 0.3s; display: inline-block; margin: 10px 5px;  
-                  font-family: 'Baloo Tamma';  
-        }  
-        .btn:hover {  
-            transform: translateY(-2px);  
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);  
-        }  
-        .btn-secondary {background: #6c757d;}  
-        .timer {  
-            position: absolute; top: 20px; right: 20px;  
-            background:#ff6b6b; color:white; padding:10px 20px;  
-            border-radius:50px; font-size:18px; font-weight:bold;  
-            animation:pulse 1s infinite;  
-        }  
-        @keyframes pulse {  
-            0%{ transform: scale(1);}  
-            50%{ transform: scale(1.05);}  
-            100%{ transform: scale(1);}  
-        }  
-        .question-container { margin-bottom: 30px;}  
-        .options { margin: 20px 0;}  
-        .option {  
-            background: #f8f9fa; padding: 15px; margin: 10px 0;  
-            border-radius:10px; cursor:pointer; transition:all 0.3s; border:2px solid transparent;  
-        }  
-        .option:hover {  
-            background: #e9ecef; transform: translateX(5px);  
-        }  
-        .option.selected {  
-            background:#667eea; color:white; border-color: #764ba2;  
-        }  
-        .option input[type="radio"] { margin-right:10px;}  
-        .progress-bar {  
-            width: 100%; height: 8px; background: #e0e0e0; border-radius: 10px;  
-            margin-bottom: 20px; overflow: hidden;  
-        }  
-        .progress-fill {  
-            height:100%;  
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);  
-            border-radius:10px;  
-            transition: width 0.3s ease;  
-        }  
-        .modal {  
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;  
-            background: rgba(0, 0, 0, 0.5); align-items: center; justify-content: center;  
-            z-index: 1000; overflow-y: auto; padding: 20px;  
-        }  
-        .modal.active {display:flex;}  
-        .modal-content {  
-            background:white; padding:30px; border-radius:10px;  
-            max-width:400px; text-align:center; animation:bounceIn 0.5s;  
-            max-height:90vh; overflow-y:auto; position:relative;  
-      }  
-        @keyframes bounceIn {  
-            0%{transform:scale(0.3);opacity:0;}  
-            50%{transform:scale(1.05);}  
-            70%{transform:scale(0.9);}  
-            100%{transform:scale(1);opacity:1;}Btn  
-        }  
-    </style>  
-</head>  
-<body>  
-    <div class="container">  
-        <!-- Welcome Page -->  
-        <div class="page active" id="welcomePage">  
-            <h1>ಸ್ವಾಗತ!!</h1>  
-            <img id="quizBanner"  
-                 src="https://raw.githubusercontent.com/dk-kannadiga/Quiz/refs/heads/main/Quiz%20Poster%20(1).jpg"  
-                 alt="Quiz Banner"  
-                 class="welcome-image">  
-          <p style="text-align:center;font-weight:Bold;font-size:30px;color:#000000;margin:20px 0;">ನಮಸ್ಕಾರ🙏  
-          <p style="text-align:center;font-weight:0;font-size:25px;color:#000000;margin:20px 0;"> ರಾಜ್ಯೋತ್ಸವ ಕ್ವಿಜ್‌ ೪.೦ಗೆ ಸ್ವಾಗತ</p>
-            <div style="text-align:left">
-                <ul>
-                    <li>ಒಟ್ಟು ಇಪ್ಪತ್ತೈದು ಪ್ರಶ್ನೆಗಳು</li>
-                    <li>ಪ್ರತಿ ಪ್ರಶ್ನೆಗೂ ನಾಲ್ಕು ಆಯ್ಕೆಗಳು</li>
-                    <li>ಪ್ರತಿ ಪ್ರಶ್ನೆಗೂ ಉತ್ತರಿಸಲು ಮೂವತ್ತು ಸೆಕೆಂಡುಗಳ ಸಮಯಾವಕಾಶ</li>
-                    <li>ಸರಿಯುತ್ತರ ಆರಿಸಿದಮೇಲೆ "ಸಲ್ಲಿಸಿ" ಗುಂಡಿ ಒತ್ತಬೇಕು</li>
-                    <li>ಉತ್ತರದ ಬಗ್ಗೆ ಖಚಿತತೆ ಇಲ್ಲದಿದ್ದರೆ "ಬಿಟ್ಟುಬಿಡಿ" ಗುಂಡಿ ಒತ್ತಬಹುದು</li>
-                    <li>ಉತ್ತರ ಆಯ್ಕೆಮಾಡಿ "ಸಲ್ಲಿಸಿ" ಗುಂಡಿ ಒತ್ತದಿದ್ದರೆ ಸಮಯ ಮುಗಿಯುವುದರೊಳಗೆ ಆಯ್ಕೆ ಮಾಡಿಕೊಂಡ ಉತ್ತರವನ್ನೇ ಪರಿಗಣಿಸಲಾಗುವುದು</li>
-                    <li>ಮೂವತ್ತು ಸೆಕೆಂಡಿನೊಳಗೆ ಯಾವುದೂ ಉತ್ತರವನ್ನು ಆಯ್ಕೆ ಮಾಡಿರದಿದ್ದರೆ ಆ ಪ್ರಶ್ನೆಗೆ ಅಂಕ ಸೊನ್ನೆ ಎಂದು ಪರಿಗಣಿಸಲಾಗುವುದು</li>
-                    <li>ತಪ್ಪು ಉತ್ತರಗಳಿಗಾಗಲೀ, ಬಿಟ್ಟ ಉತ್ತರಗಳಿಗಾಗಲೀ ಋಣಾಂಕ ಇಲ್ಲ</li>
-                </ul>
-            <p style="text-align:center;font-weight:Bold;font-size:30px;color:#000000;margin:20px 0;">ಶುಭವಾಗಲಿ 👍</p>
-            </div>
-            <div style="text-align:center">  
-                <button class="btn" onclick="showPage('registrationPage')">ಮುಂದುವರೆಯಿರಿ</button>  
-            </div>  
-        </div>  
-        <!-- Registration Page -->  
-        <div class="page" id="registrationPage">  
-            <h2>ನೋಂದಣಿ</h2>  
-            <div class="progress-bar">  
-                <div class="progress-fill" style="width: 33%;"></div>  
-            </div>  
-            <form id="registrationForm">  
-                <div class="form-group">  
-                    <label for="name">ಹೆಸರು (Name) *</label>  
-                    <input type="text" id="name" required>  
-                </div>  
-                <div class="form-group">  
-                    <label for="email">ಮಿಂಚೆ ವಿಳಾಸ (email ID) *</label>  
-                    <input type="email" id="email" required>  
-                </div>  
-                <div class="form-group">  
-                  <label for="phone">ಸಂಪರ್ಕ ಸಂಖ್ಯೆ (Phone Number)*</label>  
-                    <input type="tel" id="phone" required>  
-                </div>  
-                <div class="form-group" id="addressField" style="display: none;">  
-                    <label for="address">ಮನೆ ವಿಳಾಸ (Postal Address)*</label>  
-                    <textarea id="address" rows="3"></textarea>  
-                </div>  
-              <div style="text-align:center">  
-                <button type="submit" class="btn">ಮುಂದುವರೆಯಿರಿ</button>  
-              </div>  
-            </form>  
-        </div>  
-        <!-- Quiz Page -->  
-        <div class="page" id="quizPage">  
-            <div class="timer" id="timer">0</div>  
-            <h2 id="questionNumber">25 ರಲ್ಲಿ 1ನೇ ಪ್ರಶ್ನೆ</h2>  
-            <div class="progress-bar">  
-                <div class="progress-fill" id="quizProgress" style="width: 50%;"></div>  
-            </div>  
-            <div class="question-container">  
-                <h3 id="questionText">Sample Question?</h3>  
-                <div class="options" id="optionsContainer">  
-                    <!-- Options will be dynamically added -->  
-                </div>  
-            </div>  
-            <div style="text-align:center;">  
-                <button class="btn" onclick="submitAnswer()">ಸಲ್ಲಿಸಿ</button>  
-                <button class="btn btn-secondary" onclick="skipQuestion()">ಬಿಟ್ಟುಬಿಡಿ</button>  
-            </div>  
-        </div>  
-        <!-- Thank You Page -->  
-        <div class="page" id="thankYouPage">  
-            <h2>ಕ್ವಿಜ್‌ನಲ್ಲಿ ಭಾಗವಹಿಸಿದ್ದಕ್ಕೆ ಅಭಿನಂದನೆಗಳು!!</h2>  
-            <div style="text-align: center; padding: 20px;">  
-                <div style="font-size: 60px; margin-bottom: 20px;">🎉</div>  
-                <p style="color: #666; line-height: 1.6;">  
-                    ನಿಮ್ಮ ಉತ್ತರಗಳನ್ನು ದಾಖಲಿಸಿಕೊಳ್ಳಲಾಗಿದೆ.<br><br>  
-                    ನಿಮ್ಮ ಇ-ಪ್ರಮಾಣಪತ್ರವನ್ನು<br>  
-                    <strong id="endDateTime">December 31, 2024, 5:00 PM</strong>ರಂದು ನೀವು ದಾಖಲಿಸಿರುವ ಮಿಂಚೆ ವಿಳಾಸಕ್ಕೆ ಕಳುಹಿಸಲಾಗುವುದು.  
-                </p>  
-            </div>  
-        </div>  
-    </div>  
-    <!-- Alert Modal -->  
-    <div class="modal" id="alertModal">  
-        <div class="modal-content">  
-            <p id="alertMessage">ಸಲ್ಲಿಸುವ ಮೊದಲು ಒಂದು ಆಯ್ಕೆಯನ್ನು ಆರಿಸಿ</p>  
-            <button class="btn" onclick="closeAlert()">ಸರಿ</button>  
-        </div>  
-    </div>  
-    <script>  
-        /* #############  
-        FOR INSTRUCTORS:   
-        To configure your quiz, edit quizConfig below directly!  
-        - To set your Google webhook URL: Replace quizConfig.webhookUrl below.  
-        - To set your questions: Edit the quizConfig.questions array structure.  
-        - To require a postal address: set includeAddress: true.  
-        ############# */  let quizConfig = {  
-        bannerUrl: 'https://raw.githubusercontent.com/dk-kannadiga/Quiz/refs/heads/main/Quiz%20Poster%20(1).jpg',  
-        includeAddress: true, // set to true if postal address is needed  
-        timerSeconds: 30,  
-        endDateTime: 'ನವೆಂಬರ್ 28, 2025, 10:00 PM',  
-        webhookUrl: 'https://script.google.com/macros/s/AKfycbwyxasu0hQg9J-QUJCyb3oWMKumuDTvBslcWNQrmCqlh430MJnpaTHb9W8rQ052HI76Aw/exec', // PASTE YOUR GOOGLE SCRIPT WEBHOOK URL HERE  
-questions: [  
-    {
-        question: "ಕನ್ನಡದ ಪ್ರಾಚೀನ ಜಾಗತಿಕ ಸಂಪರ್ಕದ ಮೊದಲ ಪುರಾವೆ ಯಾವ ಘಟನೆಯೊಂದಿಗೆ ಸಂಬಂಧಿಸಿದೆ?",
-        options: ["ರೋಮ್‌ನ ಕಲೆಮೇಳ", "ಈಜಿಪ್ಟ್‌ನಲ್ಲಿ ಪತ್ತೆಯಾದ ಗ್ರೀಕ್ ನಾಟಕ ‘ಚಾರಿಟನ್ ಮೈಮ್’", "ಚೀನಾದ ಬೌದ್ಧ ಯಾತ್ರೆಗಳು", "ಅಲೆಕ್ಸಾಂಡ್ರಿಯಾ ಗ್ರಂಥಾಲಯದ ನಾಶ"],
-        correct: 1
-    },
-    {
-        question: "‘ಚಾರಿಟನ್ ಮೈಮ್’ ನಾಟಕ ಯಾವ ಶತಮಾನದ್ದು?",
-        options: ["ಕ್ರಿ.ಪೂ. 4ನೇ ಶತಮಾನ", "ಕ್ರಿ.ಶ. 1ನೇ ಅಥವಾ 2ನೇ ಶತಮಾನ", "ಕ್ರಿ.ಶ. 6ನೇ ಶತಮಾನ", "ಕ್ರಿ.ಶ. 10ನೇ ಶತಮಾನ"],
-        correct: 1
-    },
-    {
-        question: "‘ಕೊಂಚ ಮಧು ಪಾತ್ರೆಗೆ ಹಾಕು’ ಎಂಬ ಸಾಲು ಯಾವ ನಾಟಕದಲ್ಲಿ ಕಂಡುಬರುತ್ತದೆ?",
-        options: ["ಎಪಿಗ್ರಾಫಿಯಾ ಕರ್ನಾಟಕ", "ಚಾರಿಟನ್ ಮೈಮ್", "ಕಥಾಮಾಲೆ", "ಮಂಗಳೂರು ಸಮಾಚಾರ"],
-        correct: 1
-    },
-    {
-        question: "ಗ್ರೀಕ್ ನಾಟಕ ಚಾರಿಟನ್ ಮೈಮ್‌ನಲ್ಲಿ ಕನ್ನಡ  ಭಾಷೆಯ ಬಳಕೆ ಯಾವ ವಿಷಯವನ್ನು ಸೂಚಿಸುತ್ತದೆ?",
-        options: ["ಅಂದಿನ ವ್ಯಾಪಾರ ವ್ಯವಹಾರಗಳಲ್ಲಿ ದ್ರಾವಿಡ ಭಾಷೆಗಳ ಪ್ರಭಾವ", "ಗ್ರೀಕ್ ಸಂಸ್ಕೃತಿಯ ಪ್ರಭಾವ ಕನ್ನಡದ ಮೇಲೆ", "ರೋಮನ್ ಲಿಪಿಯ ಮೂಲ ಕನ್ನಡದಲ್ಲಿದೆ", "ಈಜಿಪ್ಟ್‌ನಿಂದ ಕನ್ನಡಕ್ಕೆ ಭಾಷಾಂತರಗಳ ಪ್ರಾರಂಭ"],
-        correct: 0
-    },
-    {
-        question: "ಈಜಿಪ್ತಿನ ಗೋಡೆಯಲ್ಲಿ ಕಂಡುಬಂದ ‘ಊರೊಳ್’ ಪದದ ಮಹತ್ವವೇನು?",
-        options: ["ಪುರಾತನ ಶಿಲಾಶಾಸನದ ಕಲೆಮಾದರಿ", "ಕ್ರಿ.ಪೂ. ಕಾಲದಲ್ಲಿಯೇ ಕನ್ನಡದ ಲಿಖಿತ ಪುರಾವೆಯ ಅಸ್ತಿತ್ವ", "ಲ್ಯಾಟಿನ್ ಪದದ ವ್ಯಾಕರಣಾತ್ಮಕ ರೂಪಾಂತರ", "ಅಲಂಕಾರಿಕ ಅಕ್ಷರಶೈಲಿ"],
-        correct: 1
-    },
-    {
-        question: "‘ಊರೊಳ್’ ಎಂಬ ಪದದ ಅರ್ಥವೇನು?",
-        options: ["ಊರಿನ ಹೊರಗೆ", "ಊರಿನಲ್ಲಿ ಅಥವಾ ಊರೊಳಗೆ", "ಊರದ ಮುಂದೆ", "ಊರದ ಮೇಲೆ"],
-        correct: 1
-    },
-    {
-        question: "‘ಊರೊಳ್’ ಎಂಬ ಪುರಾವೆ ಯಾವ ನಗರದಲ್ಲಿನ ಸ್ಮಾರಕ ಗೋಡೆಯಲ್ಲಿ ಕಂಡುಬಂದಿತು?",
-        options: ["ರೋಮ್", "ಮೈಸೂರು", "ಅಲೆಕ್ಸಾಂಡ್ರಿಯಾ", "ಅಥೆನ್ಸ್"],
-        correct: 2
-    },
-    {
-        question: "ಅಲೆಕ್ಸಾಂಡ್ರಿಯಾ ಗ್ರಂಥಾಲಯವು ಯಾವ ಕಾಲದಲ್ಲಿ ಬೆಂಕಿಗೆ ಆಹುತಿಯಾಯಿತು?",
-        options: ["ಕ್ರಿ.ಪೂ. 48", "ಕ್ರಿ.ಶ. 48", "ಕ್ರಿ.ಶ. 284", "ಕ್ರಿ.ಪೂ. 200"],
-        correct: 0
-    },
-    {
-        question: "‘ಕನ್ನಡ ನಿಘಂಟುಶಾಸ್ತ್ರದ ಪಿತಾಮಹ’ ಯಾರನ್ನು ಕರೆಯಲಾಗುತ್ತದೆ?",
-        options: ["ಬೆಂಜಮಿನ್ ಲೂಯಿಸ್ ರೈಸ್", "ಫರ್ಡಿನೆಂಡ್ ಕಿಟ್ಟೆಲ್", "ವಿಲಿಯಂ ರೀವ್", "ಹರ್ಮನ್ ಮೊಗ್ಲಿಂಗ್"],
-        correct: 1
-    },
-    {
-        question: "ಫರ್ಡಿನೆಂಡ್ ಕಿಟ್ಟೆಲ್ ಅವರ ಕನ್ನಡ-ಇಂಗ್ಲಿಷ್ ನಿಘಂಟು ಯಾವ ವರ್ಷದಲ್ಲಿ ಪ್ರಕಟವಾಯಿತು?",
-        options: ["1832", "1884", "1894", "1910"],
-        correct: 2
-    },
-    {
-        question: "ಕಿಟ್ಟೆಲ್ ಅವರ ನಿಘಂಟಿನಲ್ಲಿ ಸುಮಾರು ಎಷ್ಟು ಪದಗಳಿವೆ?",
-        options: ["20,000", "40,000", "70,000", "1,00,000"],
-        correct: 2
-    },
-    {
-        question: "ಬೆಂಜಮಿನ್ ಲೂಯಿಸ್ ರೈಸ್ ಅವರ ಪ್ರಮುಖ ಕೃತಿ ಯಾವುದು?",
-        options: ["ಕಥಾಮಾಲೆ", "ಎಪಿಗ್ರಾಫಿಯಾ ಕರ್ನಾಟಕ", "ವ್ಯಾಕರಣಮಾಲೆ", "ಮಂಗಳೂರು ಸಮಾಚಾರ"],
-        correct: 1
-    },
-    {
-        question: "‘ಶಾಸನ ಪಿತಾಮಹ’ ಎಂಬ ಬಿರುದು ಯಾರಿಗೆ ಸಿಕ್ಕಿದೆ?",
-        options: ["ಫರ್ಡಿನೆಂಡ್ ಕಿಟ್ಟೆಲ್", "ವಿಲಿಯಂ ರೀವ್", "ಬೆಂಜಮಿನ್ ಲೂಯಿಸ್ ರೈಸ್", "ಹರ್ಮನ್ ಮೊಗ್ಲಿಂಗ್"],
-        correct: 2
-    },
-    {
-        question: "ಮೈಸೂರು ಪ್ರಾಚ್ಯವಸ್ತು ಇಲಾಖೆಯ ಮೊದಲ ನಿರ್ದೇಶಕ ಯಾರು?",
-        options: ["ಬೆಂಜಮಿನ್ ಲೂಯಿಸ್ ರೈಸ್", "ಜಾನ್ ಫೇಯ್ತ್‌ಫುಲ್ ಫ್ಲೀಟ್", "ವಾಲ್ಟರ್ ಎಲಿಯಟ್", "ಫರ್ಡಿನೆಂಡ್ ಕಿಟ್ಟೆಲ್"],
-        correct: 0
-    },
-    {
-        question: "ಕನ್ನಡದ ಮೊದಲ ಪತ್ರಿಕೆ ‘ಮಂಗಳೂರು ಸಮಾಚಾರ’ ಯಾರು ಆರಂಭಿಸಿದರು?",
-        options: ["ಕಿಟ್ಟೆಲ್", "ಮೊಗ್ಲಿಂಗ್", "ರೈಸ್", "ರೀವ್"],
-        correct: 1
-    },
-    {
-        question: "ಮಂಗಳೂರು ಸಮಾಚಾರ ಯಾವ ವರ್ಷದಲ್ಲಿ ಪ್ರಕಟವಾಯಿತು?",
-        options: ["1821", "1832", "1843", "1894"],
-        correct: 2
-    },
-    {
-        question: "‘ಕನ್ನಡ ಪತ್ರಿಕೋದ್ಯಮ ಪ್ರವರ್ತಕ’ ಎಂದು ಯಾರನ್ನು ಕರೆಯಲಾಗುತ್ತದೆ?",
-        options: ["ಹರ್ಮನ್ ಮೊಗ್ಲಿಂಗ್", "ಫರ್ಡಿನೆಂಡ್ ಕಿಟ್ಟೆಲ್", "ವಾಲ್ಟರ್ ಎಲಿಯಟ್", "ಜಾನ್ ಫೇಯ್ತ್‌ಫುಲ್ ಫ್ಲೀಟ್"],
-        correct: 0
-    },
-    {
-        question: "‘A Grammar of the Kannada Language’ ಗ್ರಂಥದ ಕೃತಿಕಾರ ಯಾರು?",
-        options: ["ಕಿಟ್ಟೆಲ್", "ರೈಸ್", "ರೀವ್", "ಮೊಗ್ಲಿಂಗ್"],
-        correct: 0
-    },
-    {
-        question: "ವಿಲಿಯಂ ರೀವ್ ಅವರ ನಿಘಂಟಿನ ವಿಶೇಷತೆ ಯಾವುದು?",
-        options: ["ಕಿಟ್ಟೆಲ್‌ಗಿಂತ ಮುಂಚೆ ರಚನೆಯಾದ ಇಂಗ್ಲಿಷ್-ಕನ್ನಡ ನಿಘಂಟು", "ಕೇವಲ ವ್ಯಾಕರಣ ಕೃತಿಯಷ್ಟೇ", "ಹಳೆಗನ್ನಡದಿಂದ ಇಂಗ್ಲಿಷ್‌ಗೆ ಭಾಷಾಂತರ", "ಪಾಳಿ ಭಾಷೆಯ ಪ್ರಭಾವದಿಂದ ರಚಿತವಾದದು"],
-        correct: 0
-    },
-    {
-        question: "ನವೋದಯ ಚಳುವಳಿಯು ಯಾರ ಕರೆಯ ಮೇರೆಗೆ ಆರಂಭವಾಯಿತು?",
-        options: ["ಕುವೆಂಪು", "ಬಿ.ಎಂ. ಶ್ರೀಕಂಠಯ್ಯ", "ದಿ.ರಾ. ಬೇಂದ್ರೆ", "ಎಂ.ವಿ. ಸೇತುರಾಮಯ್ಯ"],
-        correct: 1
-    },
-    {
-        question: "ನವೋದಯ ಕಾಲದಲ್ಲಿ ಕನ್ನಡ ಸಾಹಿತ್ಯಕ್ಕೆ ಯಾವ ಪ್ರಭಾವ ಪ್ರಮುಖವಾಗಿತ್ತು?",
-        options: ["ಪಾಳಿ ಸಾಹಿತ್ಯ", "ಪಾಶ್ಚಾತ್ಯ ಸಾಹಿತ್ಯ", "ಅರಬಿಕ್ ಸಾಹಿತ್ಯ", "ಚೀನಿ ಸಾಹಿತ್ಯ"],
-        correct: 1
-    },
-    {
-        question: "ನಾವಿಕ (NAVKA) ಮತ್ತು ಅಕ್ಕ (AKKA) ಯಾವ ರೀತಿಯ ಸಂಸ್ಥೆಗಳಾಗಿವೆ?",
-        options: ["ಸರ್ಕಾರದ ಇಲಾಖೆಗಳು", "ಕನ್ನಡ ಸಂಸ್ಕೃತಿಯ ವಿದೇಶಿ ಸಂಘಗಳು", "ಭಾಷಾಂತರ ಸಂಸ್ಥೆಗಳು", "ಶಿಕ್ಷಣ ಸಂಸ್ಥೆಗಳು"],
-        correct: 1
-    },
-    {
-        question: "ನಾವಿಕ ವಿಶ್ವ ಕನ್ನಡ ಸಮ್ಮೇಳನವು ಯಾವ ದೇಶದಲ್ಲಿ ನಡೆದಿತ್ತು?",
-        options: ["ಇಂಗ್ಲೆಂಡ್", "ಆಸ್ಟ್ರೇಲಿಯಾ", "ಅಮೆರಿಕ", "ಸಿಂಗಾಪುರ್"],
-        correct: 2
-    },
-    {
-        question: "‘ಕನ್ನಡ ಕೂಟಗಳು’ ವಿದೇಶದಲ್ಲಿ ಯಾವ ಉದ್ದೇಶಕ್ಕಾಗಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತವೆ?",
-        options: ["ಕನ್ನಡದ ಧಾರ್ಮಿಕ ಚಟುವಟಿಕೆ", "ಕನ್ನಡ ಭಾಷೆ, ಸಾಹಿತ್ಯ ಮತ್ತು ಸಂಸ್ಕೃತಿಯ ಪ್ರಸಾರ", "ವಾಣಿಜ್ಯ ಅಭಿವೃದ್ಧಿ", "ರಾಜಕೀಯ ಚಟುವಟಿಕೆ"],
-        correct: 1
-    },
-    {
-        question: "ಯಾವ ವಿದೇಶಿ ವಿದ್ವಾಂಸರು `ಎಪಿಗ್ರಾಫಿಯಾ ಇಂಡಿಕಾ’ ಗ್ರಂಥದ ಸಂಪಾದಕರಾಗಿದ್ದರು?",
-        options: ["ವಾಲ್ಟರ್ ಎಲಿಯಟ್", "ಜಾನ್ ಫೇಯ್ತ್‌ಫುಲ್ ಫ್ಲೀಟ್", "ಹರ್ಮನ್ ಮೊಗ್ಲಿಂಗ್", "ಬೆಂಜಮಿನ್ ಲೂಯಿಸ್ ರೈಸ್"],
-        correct: 1
-    }
-]  
-    };  
+<!DOCTYPE html>
+<html lang="kn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Message</title>
 
-    // Quiz State  
-    let currentQuestion = 0;  
-    let userAnswers = [];  
-    let timerInterval;
-    let currentTimer;
-    let selectedOption = null;  
-    let userData = {};  
+    <!-- Anek Kannada Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Kannada:wght@400;700&display=swap" rel="stylesheet">
 
-    // Load config from localStorage (optional, if using)  
-    function loadConfig() {  
-        const saved = localStorage.getItem('quizConfig');  
-        if (saved) {  
-            quizConfig = JSON.parse(saved);  
-            applyConfig();  
-        } else {  
-            applyConfig();  
-        }  
-    }  
-    function applyConfig() {  
-        document.getElementById('quizBanner').src = quizConfig.bannerUrl;  
-        document.getElementById('addressField').style.display =   
-            quizConfig.includeAddress ? 'block' : 'none';  
-        document.getElementById('endDateTime').textContent = quizConfig.endDateTime;  
-       // ✅ Make postal address required only if includeAddress is true  
-document.getElementById('address').required = quizConfig.includeAddress;  
-    }  
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    // Page Navigation  
-    function showPage(pageId) {  
-        document.querySelectorAll('.page').forEach(page => {  
-            page.classList.remove('active');  
-        });  
-        document.getElementById(pageId).classList.add('active');  
-        if (pageId === 'quizPage') {  
-            showQuestion();  
-        }  
-    }  
+        body {
+            font-family: 'Anek Kannada', sans-serif;
+            background: linear-gradient(135deg, #ffff00 0%, #ff0000 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-    // Registration  
-    document.getElementById('registrationForm').addEventListener('submit', function(e) {  
-        e.preventDefault();  
-        userData = {  
-            name: document.getElementById('name').value,  
-            email: document.getElementById('email').value,  
-            phone: document.getElementById('phone').value,  
-            address: document.getElementById('address').value || 'N/A',  
-            timestamp: new Date().toISOString()  
-        };  
-        showPage('quizPage');  
-    });  
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            animation: fadeIn 0.5s ease-out;
+            text-align: center;
+        }
 
-    // Quiz Functions  
-    function showQuestion() {  
-        if (currentQuestion >= quizConfig.questions.length) {  
-            submitQuizResults();  
-            return;  
-        }  
-        const q = quizConfig.questions[currentQuestion];  
-        document.getElementById('questionNumber').textContent =   
-            `${quizConfig.questions.length}ರಲ್ಲಿ ${currentQuestion + 1}ನೇ ಪ್ರಶ್ನೆ`;  
-        document.getElementById('questionText').textContent = q.question;  
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: none; }
+        }
 
-        // Update progress  
-        const progress = ((currentQuestion + 1) / quizConfig.questions.length) * 100;  
-        document.getElementById('quizProgress').style.width = progress + '%';  
+        p {
+            font-size: 25px;
+            line-height: 1.6;
+            color: #000;
+            margin-bottom: 25px;
+        }
 
-        // Clear and populate options  
-        const container = document.getElementById('optionsContainer');  
-        container.innerHTML = '';  
-        selectedOption = null;  
+        .signature {
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 26px;
+        }
+    </style>
+</head>
 
-        q.options.forEach((option, index) => {  
-            const div = document.createElement('div');  
-            div.className = 'option';  
-            div.innerHTML = `  
-                <input type="radio" name="option" value="${index}" id="opt${index}">  
-                <label for="opt${index}" style="cursor: pointer; margin: 0;">${option}</label>  
-            `;  
-            div.onclick = () => selectOption(index, div);  
-            container.appendChild(div);  
-        });  
+<body>
 
-        startTimer();  
-    }  
-    function selectOption(index, element) {  
-        document.querySelectorAll('.option').forEach(opt => {  
-            opt.classList.remove('selected');  
-        });  
-        element.classList.add('selected');  
-        selectedOption = index;  
-        document.querySelector(`#opt${index}`).checked = true;  
-    }  
-    function startTimer() {  
-        currentTimer = quizConfig.timerSeconds;  
-        document.getElementById('timer').textContent = currentTimer;  
+    <div class="container">
 
-        clearInterval(timerInterval);  
-        timerInterval = setInterval(() => {  
-            currentTimer--;  
-            document.getElementById('timer').textContent = currentTimer;  
-            if (currentTimer <= 0) {  
-                clearInterval(timerInterval);  
-                // Auto-submit or skip  
-                if (selectedOption !== null) {  
-                    recordAnswer(selectedOption);  
-                } else {  
-                    recordAnswer('skipped');  
-                }  
-                nextQuestion();  
-            }  
-        }, 1000);  
-    }  
-    function submitAnswer() {  
-        if (selectedOption === null) {  
-            showAlert('ಸಲ್ಲಿಸುವ ಮುನ್ನ ಒಂದು ಆಯ್ಕೆಯನ್ನು ಆರಿಸಿ');  
-            return;  
-        }  
-        clearInterval(timerInterval);  
-        recordAnswer(selectedOption);  
-        nextQuestion();  
-    }  
-    function skipQuestion() {  
-        clearInterval(timerInterval);  
-        recordAnswer('skipped');  
-        nextQuestion();  
-    }  
-    function recordAnswer(answer) {  
-        userAnswers.push({  
-            q: currentQuestion,  
-            a: answer,  
-            t: currentTimer  
-        });  
-    }  
-    function nextQuestion() {  
-        currentQuestion++;  
-        if (currentQuestion < quizConfig.questions.length) {  
-            showQuestion();  
-        } else {  
-            submitQuizResults();  
-        }  
-    }  
-    function submitQuizResults() {  
-        clearInterval(timerInterval);  
+        <p>ಕ್ವಿಜ್ ಮುಗಿದಿದೆ.</p>
 
-        // Prepare data for Google Sheets  
-        const quizData = {  
-            ...userData,  
-            answers: userAnswers,  
-            score: calculateScore(),  
-            completedAt: new Date().toISOString()  
-        };  
+        <p>
+            ನೀವು ಈಗಾಗಲೇ ಭಾಗವಹಿಸಿದ್ದರೆ, ನಿಮ್ಮ ಮಿಂಚೆ ವಿಳಾಸಕ್ಕೆ ಅಭಿನಂದನಾ ಪತ್ರ ತಲುಪಿರುತ್ತದೆ.<br>
+            (ಇಲ್ಲವಾದಲ್ಲಿ, 8147857316 ಸಂಖ್ಯೆಗೆ ವಾಟ್ಸಾಪ್ ಮೂಲಕ ಸಂಪರ್ಕಿಸಿ)
+        </p>
 
-        // Send to Google Sheets (if webhook URL is configured)  
-        if (quizConfig.webhookUrl) {  
-            fetch(quizConfig.webhookUrl, {  
-                method: 'POST',  
-                mode: 'no-cors',  
-                headers: { 'Content-Type': 'application/json' },  
-                body: JSON.stringify(quizData)  
-            }).catch(err => console.log('Error submitting to Google Sheets:', err));  
-        }  
+        <p>ಮುಂದಿನ ಕ್ವಿಜ್‌ಗಾಗಿ ಇದೇ ಲಿಂಕನ್ನು ಅನುಸರಿಸಿ.</p>
 
-        // Store locally as backup  
-        const submissions = JSON.parse(localStorage.getItem('quizSubmissions') || '[]');  
-        submissions.push(quizData);  
-        localStorage.setItem('quizSubmissions', JSON.stringify(submissions));  
+        <p>ಧನ್ಯವಾದ 🙏</p>
 
-        showPage('thankYouPage');  
-    }  
-    function calculateScore() {  
-        let score = 0;  
-        userAnswers.forEach((ans, index) => {  
-            if (ans.a === quizConfig.questions[ans.q].correct) {  
-                score++;  
-            }  
-        });  
-        return score;  
-    }  
-    // Alert Functions  
-    function showAlert(message) {  
-        document.getElementById('alertMessage').textContent = message;  
-        document.getElementById('alertModal').classList.add('active');  
-    }  
-    function closeAlert() {  
-        document.getElementById('alertModal').classList.remove('active');  
-    }  
+        <p class="signature">ಇಂತೀ,<br>ಡೀಕೆ</p>
 
-    // Initialize  
-    loadConfig();  
-</script>
+    </div>
 
-</body>  
+</body>
 </html>
